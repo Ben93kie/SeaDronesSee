@@ -33,7 +33,7 @@ Soon, we will update the SeaDronesSee benchmark and add additional data - stay t
 "bbox": [ 426.15203857421875, 563.6422119140625, 43.328399658203125, 18.97894287109375 ] }
 ```
 
-The predictions are evaluated on AP50:0.05:95, AP50, AP75, AR1, AR10. You can upload your prediction [here](https://seadronessee.cs.uni-tuebingen.de/upload) upon registration. If you need, you can test your json-style COCO prediction with the evaluation script here. You have to replace GROUND_TRUTH_COCO_JSON.json with the corresponding json file from the webserver.
+The predictions are evaluated on AP50:0.05:95, AP50, AP75, AR1, AR10. You can upload your prediction [here](https://seadronessee.cs.uni-tuebingen.de/upload) upon registration. If you need, you can test your json-style COCO prediction with the evaluation script [here](OD/od.py). You have to replace GROUND_TRUTH_COCO_JSON.json with the corresponding json file from the webserver.
 
 
 
