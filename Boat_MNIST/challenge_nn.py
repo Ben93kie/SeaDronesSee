@@ -180,7 +180,7 @@ def main():
 
     # --- Do not touch -----
     # Save model as onnx file
-    dummy_input = torch.randn(1, 3, 108, 192, device="cuda")
+    dummy_input = torch.randn(1, 3, 108, 192, device=device)
     input_names = ["img_1"]
     output_names = ["output1"]
     torch.onnx.export(model, dummy_input, "ship_example.onnx", input_names=input_names, output_names=output_names)
