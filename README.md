@@ -6,7 +6,7 @@ SeaDronesSee is a large-scale data set aimed at helping develop systems for Sear
 This repository contains evaluation kits, code and model samples and links to the SeaDronesSee benchmark and evaluation webserver.
 
 
-## Data Set
+## Data Sets
 
 You can find the data sets on our webserver [here](https://seadronessee.cs.uni-tuebingen.de/dataset). Currently, we provide the following data sets:
 
@@ -67,6 +67,21 @@ The submission format is similar to the one for the [MOT-challenge](https://motc
 
 Inside any of the .txt files there has to be one line per object per frame. Each line is formatted like: [frame_id],[object_id],x,y,w,h
 frame_id and object_id are supposed to be integers, the rest of the numbers may be floats. The frame_id can be obtained from the .json file while the object_id can be assigned by your tracker. Coordinates x and y are the upper left coordinate of the bounding box while w and h are its width and height, respectively. All of these are expressed in pixels. 
+
+### Multi-Spektral Object Detection
+
+Currently, there is no challenge or leaderboard for this track.
+
+### Boat-MNIST
+
+This is a toy data set for the task of binary image classification. There are the following two classes: 
+
+1 - if the image contains any watercraft instance including boats, ships, surfboards, ... ON the water
+0 - all the rest, i.e. just water or anything on the land (could also be boats)
+
+Naturally, there may be edge cases (e.g. boats at the verge of the water and the shore). These may be attributed to both classes.
+
+This task aims at 
 
 
 #### Citation
