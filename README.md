@@ -36,6 +36,24 @@ Soon, we will update the SeaDronesSee benchmark and add additional data - stay t
 The predictions are evaluated on AP50:0.05:95, AP50, AP75, AR1, AR10. You can upload your prediction [here](https://seadronessee.cs.uni-tuebingen.de/upload) upon registration. If you need, you can test your json-style COCO prediction with the evaluation script [here](OD/od.py). You have to replace GROUND_TRUTH_COCO_JSON.json with the corresponding json file from the webserver.
 
 
+### Single-Object Tracking
+
+ There are 80 testing video clips on which the performance is measured. The protocol is based on the implementation of [PyTracking](https://github.com/visionml/pytracking). Note that this is a short-term Single-Object Tracking task, meaning that clips only feature objects that are present in the video during the whole video and do not disappear and reappear.
+
+You need to submit a zip-file containing exactly 80 text-files, each corresponding to the respective clip. Each text file has to be named j.txt where j is the number corresponding to the respective clip (1,...,80). Each text file has as many rows as its corresponding clip has frames. Each row has 4 comma separated numbers (x,y,w,h), where x is the left-most pixel value of the tracked object's bounding box, y the top-most pixel value and w and h the width and height of the bounding box in pixels.
+
+Via the link for "Single-Object Tracking" above, you will find three json-files (SeaDronesSee_train.json, SeaDronesSee_val.json,SeaDronesSee_test.json). It is a dict of dicts, where for each track/clip number, you find the corresponding frames that need to be taken from the Multi-Object Tracking link.
+
+For example, in the following you see the first track starting with the frame 000486.png, with corresponding path lake_constance_v2021_tracking/images/test/486.png, followed by frame 000487.png and so on. Afterwards, we have clip 2 starting with frame 000494.png and so on:
+
+{"1": {"000486.png": "lake_constance_v2021_tracking/images/test/486.png", "000487.png": "lake_constance_v2021_tracking/images/test/487.png", "000488.png": "lake_constance_v2021_tracking/images/test/488.png",... "000636.png": "lake_constance_v2021_tracking/images/test/636.png"}, "2": {"000494.png": "lake_constance_v2021_tracking/images/test/494.png",...
+
+Furthermore, you find three folder: train_annotations, val_annotations, test_annotations_first_frame. For the train and val case you find the corresponding annotations for the respective clip in the respective train or val set. Each clip has its own text file with each line corresponding to the bounding box for that frame. The test folder contains text files for each clip as well but only contains the bounding box ground truth for the very first frame and dummy values for the succeeding frames.
+
+See also the compressed folder sample_submission.zip in the Single-Object Tracking nextcloud folder. This zip-archive could be uploaded right away but will naturally yield bad results.
+
+The predictions are evaluated on precision and success numbers. 
+
 
 
 #### Citation
