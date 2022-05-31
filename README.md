@@ -74,14 +74,14 @@ Currently, there is no challenge or leaderboard for this track.
 
 ### Boat-MNIST
 
-This is a toy data set for the task of binary image classification. There are the following two classes: 
+This is a toy data set for the task of binary image classification. It aims at providing a simple hands-on benchmark to test small neural networks. There are the following two classes: 
 
 1 - if the image contains any watercraft instance including boats, ships, surfboards, ... ON the water
 0 - all the rest, i.e. just water or anything on the land (could also be boats)
 
 Naturally, there may be edge cases (e.g. boats at the verge of the water and the shore). These may be attributed to both classes.
 
-This task aims at 
+As metrics, we employ the prediction accuracy (number of correctly predicted images divided by number of all images) and the number of parameters of the model. For this benchmark, you can upload your trained ONNX model to be ranked on the leaderboard. For that, please refer to [this sample script](Boat_MNIST/train_boat_mnist.py). It trains a simple multi-layer perceptron architecture on this data set upon saving and exporting the Pytorch model as an ONNX. Make sure the exported model uses the transformation provided in this code, as this is the transformation used for the webserver evaluation.
 
 
 #### Citation
