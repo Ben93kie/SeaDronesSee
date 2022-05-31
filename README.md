@@ -50,7 +50,7 @@ For example, in the following you see the first track starting with the frame 00
 
 Furthermore, you find three folder: train_annotations, val_annotations, test_annotations_first_frame. For the train and val case you find the corresponding annotations for the respective clip in the respective train or val set. Each clip has its own text file with each line corresponding to the bounding box for that frame. The test folder contains text files for each clip as well but only contains the bounding box ground truth for the very first frame and dummy values for the succeeding frames.
 
-See also the compressed folder sample_submission.zip in the Single-Object Tracking nextcloud folder. This zip-archive could be uploaded right away but will naturally yield bad results.
+See also the compressed folder [sample_submission.zip](SOT/sample_submission.zip). This zip-archive could be uploaded right away but will naturally yield bad results.
 
 The predictions are evaluated on precision and success numbers. 
 
