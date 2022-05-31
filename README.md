@@ -54,6 +54,19 @@ See also the compressed folder [sample_submission.zip](SOT/sample_submission.zip
 
 The predictions are evaluated on precision and success numbers. 
 
+### Multi-Object Tracking
+
+ There are 22 video clips in the data on which you can test your trained tracker. The mapping from images to video clips can be done via the files 'instances_test_objects_in_water.json' and 'instances_test_swimmer.json', respectively. They can be found via the link above.
+For example, '410.png' from the test set can be assigned to video clip 'DJI_0057.MP4' because its entry in the annotation file looks like this:
+
+{'id': 410, 'file_name': '410.png', 'height': 2160, 'width': 3840, 'source': {'drone': 'mavic', 'folder_name': 'DJI_0057', 'video': 'DJI_0057.MP4', 'frame_no': 715}, 'video_id': 0, 'frame_index': 715, 'date_time': '2020-08-27T14:18:35.823800', 'meta': {'date_time': '2020-08-27T12:18:36', 'gps_latitude': 47.671949, 'gps_latitude_ref': 'N', 'gps_longitude': 9.269724, 'gps_longitude_ref': 'E', 'altitude': 8.599580615665955, 'gimbal_pitch': 45.4, 'compass_heading': 138.2, 'gimbal_heading': 140.9, 'speed': 0.6399828341528834, 'xspeed': -0.39998927134555207, 'yspeed': 0.39998927134555207, 'zspeed': 0.299991953509164}}
+
+The submission format is similar to the one for the [MOT-challenge](https://motchallenge.net/). To submit your results, you have to upload a zip file containing one [video_id].txt file for each video clip in its top-level domain. The ID of each video can be obtained from the .json file. Information about each video there looks like this:
+
+{'id': 0, 'height': 2160, 'width': 3840, 'name:': '/data/input/recordings/mavic/DJI_0057.MP4'}
+
+Inside any of the .txt files there has to be one line per object per frame. Each line is formatted like: [frame_id],[object_id],x,y,w,h
+frame_id and object_id are supposed to be integers, the rest of the numbers may be floats. The frame_id can be obtained from the .json file while the object_id can be assigned by your tracker. Coordinates x and y are the upper left coordinate of the bounding box while w and h are its width and height, respectively. All of these are expressed in pixels. 
 
 
 #### Citation
