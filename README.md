@@ -87,7 +87,7 @@ As metrics, we employ the prediction accuracy (number of correctly predicted ima
 
 #### Citation
 
-If you find the data set, the benchmark our this repo useful, please consider citing
+If you find the data set, the benchmark or this repo useful, please consider citing
 
 ```
 @inproceedings{varga2022seadronessee,
