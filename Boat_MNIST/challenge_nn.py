@@ -1,7 +1,7 @@
 """
 TODO
-- team member 1: <name>
-- team member 2: <name>
+- team member 1: Aslihan Özkan
+- team member 2: Kevin Weiss
 
 tasks:
     - add your team members' names at the top of the file
@@ -13,6 +13,7 @@ import copy
 import json
 import os
 from matplotlib.image import imread
+#from OD.od import ROOT_DIR
 
 import torch
 import torch.nn as nn
@@ -20,6 +21,11 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import transforms
 from torch.utils.data import Dataset
+import torchvision.transforms as transforms
+from torch.optim import lr_scheduler
+from torch.backends import cudnn
+from torchvision.datasets import ImageFolder
+from torchvision import datasets
 
 
 class Boats(Dataset):
@@ -49,31 +55,51 @@ class Boats(Dataset):
         path = os.path.join(self.root_dir, image_name)
         img = imread(path)
         return img
+        
 
 
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(3 * 192 * 108, 1)
+        self.fc1 = nn.Linear(3 * 192 * 108, 100)
+        self.bn1 = nn.BatchNorm1d(100)
+        self.fc2 = nn.Linear(100, 50)
+        self.bn2 = nn.BatchNorm1d(50)
+        self.fc3 = nn.Linear(50, 20)
+        self.bn3 = nn.BatchNorm1d(20)
+        self.fc4 = nn.Linear(20, 1)
+        #self.bn4 = nn.BatchNorm1d(1)
+        self.dropout = nn.Dropout()
 
     def forward(self, x):
         x = torch.flatten(x, start_dim=1)
-        x = self.fc1(x)
-        output = torch.sigmoid(x)
+        #x = self.dropout(x)
+        x = torch.relu(self.bn1(self.fc1(x)))
+        x = self.dropout(x)
+        x = torch.relu(self.bn2(self.fc2(x)))
+        x = self.dropout(x)
+        x = torch.tanh(self.bn3(self.fc3(x)))
+        x = self.dropout(x)
+        output = torch.sigmoid(self.fc4(x))
         return output
 
 
-def train(args, model, device, train_loader, optimizer, criterion, epoch):
+def train(args, model, device ,train_loader, optimizer, criterion, epoch):
     """
     Train a network
     You can find example code here: https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
     """
+    
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device).float()
         optimizer.zero_grad()
         output = model(data)
         loss = criterion(output, torch.unsqueeze(target, 1))
+        l2_lambda = 0.001
+        l2_norm = sum(p.pow(2.0).sum()
+            for p in model.parameters())
+        loss = loss + l2_lambda * l2_norm
         loss.backward()
         optimizer.step()
         if batch_idx % args.log_interval == 0:
@@ -107,14 +133,14 @@ def test(model, device, test_loader, criterion):
 def main():
     # Training settings
     parser = argparse.ArgumentParser(description='PyTorch Ship Detection')
-    parser.add_argument('--batch-size', type=int, default=64, metavar='N',
+    parser.add_argument('--batch-size', type=int, default=32, metavar='N',
                         help='input batch size for training (default: 64)')
     parser.add_argument('--test-batch-size', type=int, default=1000, metavar='N',
                         help='input batch size for testing (default: 1000)')
     parser.add_argument('--epochs', type=int, default=14, metavar='N',
                         help='number of epochs to train (default: 14)')
-    parser.add_argument('--lr', type=float, default=0.1, metavar='LR',
-                        help='learning rate (default: 0.1)')
+    parser.add_argument('--lr', type=float, default=0.201, metavar='LR',
+                        help='learning rate (default: 0.5)')
     parser.add_argument('--no-cuda', action='store_true', default=False,
                         help='disables CUDA training')
     parser.add_argument('--dry-run', action='store_true', default=False,
@@ -125,6 +151,11 @@ def main():
                         help='how many batches to wait before logging training status')
     parser.add_argument('--save-model', action='store_true', default=False,
                         help='For Saving the current Model')
+    parser.add_argument('--step_size', default=30, type=int, 
+                        help='learning rate decay interval')
+    parser.add_argument('--gamma', default=0.1, type=float, 
+                        help='learning rate decay scope')
+
     args = parser.parse_args()
     torch.manual_seed(args.seed)
     use_cuda = not args.no_cuda and torch.cuda.is_available()
@@ -132,7 +163,7 @@ def main():
     train_kwargs = {'batch_size': args.batch_size}
     val_kwargs = {'batch_size': args.test_batch_size}
     if use_cuda:
-        cuda_kwargs = {'num_workers': 1,
+        cuda_kwargs = {'num_workers': 3,
                        'pin_memory': True,
                        'shuffle': True}
         train_kwargs.update(cuda_kwargs)
@@ -141,31 +172,37 @@ def main():
     # Create transform
     transform = transforms.Compose([
         transforms.ToTensor(),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomVerticalFlip(),
+        transforms.RandomRotation(15),
         # This normalization is used on the test server
         transforms.Normalize([0.2404, 0.2967, 0.3563], [0.0547, 0.0527, 0.0477])
         ])
 
     # Create train and test set
-    path_to_dataset = "/PATH/TO/Boat-MNIST"   # TODO Set correct path
+    path_to_dataset = "/Users/asliozkan/Downloads/Boat-MNIST"   # TODO Set correct path
     train_set = Boats(root_dir=f'{path_to_dataset}/train', transform=transform,
-                      gt_json_path=f'{path_to_dataset}/boat_mnist_labels_trainval.json')
+                    gt_json_path=f'{path_to_dataset}/boat_mnist_labels_trainval.json')
     val_set = Boats(root_dir=f'{path_to_dataset}/val', transform=transform,
                     gt_json_path=f'{path_to_dataset}/boat_mnist_labels_trainval.json')
 
     # Create data loaders
-    train_loader = torch.utils.data.DataLoader(train_set, **train_kwargs)
-    test_loader = torch.utils.data.DataLoader(val_set, **val_kwargs)
+    train_loader = torch.utils.data.DataLoader(train_set ,shuffle=True, **train_kwargs) #shuffle=True
+    test_loader = torch.utils.data.DataLoader(val_set,shuffle=True, **val_kwargs) #shuffle=False,
 
     # Create network, optimizer and loss
     model = Net().to(device)
-    optimizer = optim.SGD(model.parameters(), lr=args.lr)
-    criterion = nn.MSELoss()
+    optimizer = optim.SGD(model.parameters(), lr=args.lr )
+    cudnn.benchmark = True
+    criterion = nn.SmoothL1Loss().to(device)
 
     # Train and validate
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer,  step_size=args.step_size, gamma=args.gamma)
     best_acc = 0
     best_model_wts = copy.deepcopy(model.state_dict())
     for epoch in range(1, args.epochs + 1):
         train(args, model, device, train_loader, optimizer, criterion, epoch)
+        exp_lr_scheduler.step()
         acc = test(model, device, test_loader, criterion)
         if acc > best_acc:
             best_acc = acc
