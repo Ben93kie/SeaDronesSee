@@ -84,6 +84,8 @@ Naturally, there may be edge cases (e.g. boats at the verge of the water and the
 
 As metrics, we employ the prediction accuracy (number of correctly predicted images divided by number of all images) and the number of parameters of the model. For this benchmark, you can upload your trained ONNX model to be ranked on the leaderboard. For that, please refer to [this sample script](Boat_MNIST/train_boat_mnist.py). It trains a simple single-layer perceptron architecture on this data set upon saving and exporting the Pytorch model as an ONNX file. Make sure the exported model uses the transformation provided in this code, as this is the transformation used for the webserver evaluation.
 
+You can also find some sample solutions of some groups in the folders under Boat-MNIST with their respective group number.
+
 
 #### Citation
 
