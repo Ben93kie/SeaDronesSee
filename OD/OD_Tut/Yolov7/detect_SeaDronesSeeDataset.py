@@ -2,6 +2,7 @@ import argparse
 import time
 from pathlib import Path
 
+import os
 import cv2
 import torch
 import torch.backends.cudnn as cudnn
@@ -133,7 +134,7 @@ def detect(save_img=False):
                         line = (cls, *xywh, conf) if opt.save_conf else (cls, *xywh)  # label format
                         with open(txt_path + '.txt', 'a') as f:
                             f.write(('%g ' * len(line)).rstrip() % line + '\n')
-                        output.append({"image_id": p.stem, "category_id": f'{int(cls)}', "bbox": xywh, "score": f'{conf:.2f}'})
+                        output.append({"image_id": int(p.stem), "category_id": int(f'{int(cls)}'), "bbox": xywh, "score": float(conf)})
 
                     if save_img or view_img:  # Add bbox to image
                         label = f'{names[int(cls)]} {conf:.2f}'
@@ -170,7 +171,8 @@ def detect(save_img=False):
     if save_txt or save_img:
         s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
         #print(f"Results saved to {save_dir}{s}")
-    with open(str(save_dir) + "\\result.json", 'w') as f:
+    os.mkdir(str(save_dir) + "\\result")
+    with open(str(save_dir) + "\\result\\result.json", 'w') as f:
         json.dump(output, f)
     print(f'Done. ({time.time() - t0:.3f}s)')
 
