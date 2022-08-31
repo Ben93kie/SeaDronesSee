@@ -1,0 +1,11 @@
+# SeaDronesSee Object Detection dataset https://seadronessee.cs.uni-tuebingen.de/home
+
+train: ./data/train
+val: ./data/val
+test: ./data/test
+
+# number of classes
+nc: 7
+
+# class names
+names: [ 'swimmer', 'floater', 'boat', 'swimmer on boat', 'floater on boat', 'lifejacket', 'ignored region' ]
