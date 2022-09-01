@@ -5,7 +5,7 @@ val: ./data/val
 test: ./data/test
 
 # number of classes
-nc: 7
+nc: 6
 
 # class names
-names: [ 'swimmer', 'floater', 'boat', 'swimmer on boat', 'floater on boat', 'lifejacket', 'ignored region' ]
+names: [ 'ignored', 'swimmer', 'boat', 'jetski', 'life_saving_appliances', 'buoy']
