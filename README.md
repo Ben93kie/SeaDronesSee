@@ -1,11 +1,6 @@
 # SeaDronesSee
 Vision Benchmark for Maritime Search and Rescue
 
-<p align="center">
- 
-![image info](./cover.gif)
- 
-</p>
 
 <div align="center">
   <img src="./cover.gif" width="600"/>
