@@ -19,9 +19,10 @@ This repository contains evaluation kits, code and model samples and links to th
 
 SeaDronesSee is featured as part of two challenges at [MaCVi '22](https://seadronessee.cs.uni-tuebingen.de/wacv23): 
 
-1. Object Detection v2 (standard Object Object Detection and binary Object Detection)
+1. Object Detection v2 (standard Object Detection and binary Object Detection)
 2. Multi-Object Tracking
 
+Find the [dataset](https://seadronessee.cs.uni-tuebingen.de/dataset), [visualization](OD/visualize/) and [evaluation](OD/evaluation of OD V2/) scripts and [training and testing tutorials](OD/OD_Tut/) here and on the [workshop page](https://seadronessee.cs.uni-tuebingen.de/wacv23).
 
 ## Data Sets
 
