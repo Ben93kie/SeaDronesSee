@@ -53,19 +53,19 @@ def get_args():
 def v1_od():
     # swimmer, person, boat, swimmer on boat, floater on boat, life jacket
     categories = [1, 2, 3, 4, 5, 6]
-    ground_truth = os.path.join(ROOT_DIR, 'annotations', 'instances_' + 'test_iscrowd' + '.json')
+    ground_truth = os.path.join(ROOT_DIR, 'annotations', 'instances_' + 'val_iscrowd' + '.json')
     return evaluate_coco(opt.file_name, categories, ground_truth)
 
 def v2_od_subtrack1():
     # swimmer, boat, jetski, life_saving_appliances, buoy
     categories = [1, 2, 3, 4, 5]
-    ground_truth = os.path.join(ROOT_DIR, 'annotations', 'od_v2_annotations', 'instances_' + 'test_iscrowd' + '.json')
+    ground_truth = os.path.join(ROOT_DIR, 'annotations', 'od_v2_annotations', 'instances_' + 'val_iscrowd' + '.json')
     return evaluate_coco(opt.file_name, categories, ground_truth)
 
 def v2_od_subtrack2(filename):
     # non-water
     categories = [0]
-    ground_truth = os.path.join(ROOT_DIR, 'annotations', 'od_v2_annotations', 'instances_' + 'test_iscrowd' + '_non_water' + '.json')
+    ground_truth = os.path.join(ROOT_DIR, 'annotations', 'od_v2_annotations', 'instances_' + 'val_iscrowd' + '_non_water' + '.json')
     return evaluate_coco(filename, categories, ground_truth)
 
 if __name__ == '__main__':
