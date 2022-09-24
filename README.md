@@ -1,5 +1,6 @@
 <head>
   <meta name="google-site-verification" content="IrTBOul_GquPsD_pSvsgGIenX7VTrGIM9fFXq7ebajc" />
+  <meta name="google-site-verification" content="7d-lc8zsGCYi_13t56Kwn9nnSKUUKZgsEMdvRCn5jew" />
 </head>  
 
 # SeaDronesSee
