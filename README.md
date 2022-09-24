@@ -1,3 +1,7 @@
+<head>
+  <meta name="google-site-verification" content="IrTBOul_GquPsD_pSvsgGIenX7VTrGIM9fFXq7ebajc" />
+</head>  
+
 # SeaDronesSee
 Vision Benchmark for Maritime Search and Rescue
 
