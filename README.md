@@ -15,9 +15,9 @@ SeaDronesSee is a large-scale data set aimed at helping develop systems for Sear
 
 This repository contains evaluation kits, code and model samples and links to the SeaDronesSee benchmark and evaluation webserver.
 
-## MaCVi 2022 - Information
+## MaCVi 2023 - Information
 
-SeaDronesSee is featured as part of two challenges at [MaCVi '22](https://seadronessee.cs.uni-tuebingen.de/wacv23): 
+SeaDronesSee is featured as part of two challenges at [MaCVi '23](https://seadronessee.cs.uni-tuebingen.de/wacv23): 
 
 1. Object Detection v2 (standard Object Detection and binary Object Detection)
 2. Multi-Object Tracking
