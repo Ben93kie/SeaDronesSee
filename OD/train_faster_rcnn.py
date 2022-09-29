@@ -4,7 +4,8 @@ import argparse
 
 import torch
 from torchvision.models.detection.faster_rcnn import FasterRCNN
-from torchvision.models import resnet18, resnet50, resnet101
+from torchvision.models import resnet18, resnet50, resnet101,\
+    ResNet101_Weights, ResNet18_Weights, ResNet50_Weights
 from torchvision.models.detection.anchor_utils import AnchorGenerator
 from torch import nn
 from torch.utils.data import DataLoader
@@ -34,10 +35,10 @@ def get_model_dir(name, resize):
 def main():
 
     # Set directory paths
-    train_data_dir = 'Datasets/seadronesea_august_splitted/images/train'
-    train_annotation_dir = 'Datasets/seadronesea_august_splitted/annotations/instances_train.json'
-    test_data_dir = 'Datasets/seadronesea_august_splitted/images/test'
-    test_annotation_dir = 'Datasets/seadronesea_august_splitted/annotations/instances_test.json'
+    train_data_dir = 'Datasets/SeaDroneSee/images/train'
+    train_annotation_dir = 'Datasets/SeaDroneSee/annotations/instances_train.json'
+    test_data_dir = 'Datasets/SeaDroneSee/images/val'
+    test_annotation_dir = 'Datasets/SeaDroneSee/annotations/instances_val.json'
 
     # Parse arguments
     parser = argparse.ArgumentParser()
@@ -82,20 +83,20 @@ def main():
     # Use ResNet-Versions as Backbone
     log_print(f'Using {args.backbone} as CNN backbone', model_dir, args.create_log)
     if args.backbone == 'resnet18':
-        modules = list(resnet18(weights=None).children())[:-2]
+        modules = list(resnet18(weights=ResNet18_Weights.DEFAULT).children())[:-2]
         backbone = nn.Sequential(*modules)
         backbone.out_channels = 512
     elif args.backbone == 'resnet50':
-        modules = list(resnet50(weights=None).children())[:-2]
+        modules = list(resnet50(weights=ResNet50_Weights.DEFAULT).children())[:-2]
         backbone = nn.Sequential(*modules)
         backbone.out_channels = 2048
-    elif args.backbone == 'resnet100':
-        modules = list(resnet101(weights=None).children())[:-2]
+    elif args.backbone == 'resnet101':
+        modules = list(resnet101(weights=ResNet101_Weights.DEFAULT).children())[:-2]
         backbone = nn.Sequential(*modules)
         backbone.out_channels = 2048
 
     # Create Anchor Generator
-    anchor_generator = AnchorGenerator(sizes=((32, 64, 128, 256, 512),),
+    anchor_generator = AnchorGenerator(sizes=((8, 16, 32, 64, 128),),
                                        aspect_ratios=((0.5, 1.0, 2.0),))
 
     # Initialize FasterRCNN with Backbone and AnchorGenerator
@@ -131,7 +132,6 @@ def main():
         for images, targets in data_loader_train:
             images = list(image.to(device) for image in images)
             targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
-            # print(targets)
 
             loss_dict = model(images, targets)
             sum_loss = sum(loss for loss in loss_dict.values())
@@ -157,7 +157,7 @@ def main():
             best_average_loss = average_loss
             early_stopping_counter = 0
             torch.save(
-                {'model_state_dict': model.state_dict()},
+                model.state_dict(),
                 model_dir
             )
 
@@ -179,17 +179,7 @@ def main():
 
     if args.create_prediction_file:
         # Create prediction file in coco format:
-        val_data_dir = 'Datasets/seadronesea_august_splitted/images/val'
-        val_annotation_dir = 'Datasets/seadronesea_august_splitted/annotations/instances_val.json'
-
-        val_dataset = SDSDataset(val_data_dir, val_annotation_dir, resize)
-
-        data_loader_val = DataLoader(val_dataset,
-                                     batch_size=1,
-                                     shuffle=True,
-                                     collate_fn=collate_fn)
-
-        generate_prediction_file(model, data_loader_val, device, resize)
+        generate_prediction_file(model, data_loader_test, device, resize)
 
 
 if __name__ == '__main__':

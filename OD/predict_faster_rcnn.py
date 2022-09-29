@@ -62,15 +62,15 @@ def generate_prediction_file(model, data_loader, device, resize):
 
 def main():
     # Set directory paths
-    data_dir = 'Datasets/seadronesea_august_splitted/images/val'
-    annotation_dir = 'Datasets/seadronesea_august_splitted/annotations/instances_val.json'
+    data_dir = 'Datasets/SeaDroneSee/images/val'
+    annotation_dir = 'Datasets/SeaDroneSee/annotations/instances_val.json'
 
     # Parse arguments
-    parser = argparse.ArgumentParser()  # description='Train Faster R-CNN on SeaDroneSee')
+    parser = argparse.ArgumentParser()
     parser.add_argument('--backbone', help='backbone of the Faster R-CNN', default='resnet18', type=str)
     parser.add_argument('--image_size', default='720x1280', type=str, help='[height]x[width]')
     parser.add_argument('--checkpoint', type=str, default=None,
-                        required=True)  # default='2022_08_24-09_18_FasterRCNN_resnet18')
+                        required=True)
     args = parser.parse_args()
 
     # Check if Cuda is available
@@ -89,7 +89,7 @@ def main():
     dataset = SDSDataset(data_dir, annotation_dir, resize)
     data_loader = DataLoader(dataset,
                              batch_size=1,
-                             shuffle=args.random_series,
+                             shuffle=False,
                              collate_fn=collate_fn)
 
     # Use ResNet-Versions as Backbone
@@ -103,13 +103,13 @@ def main():
         modules = list(resnet50(weights=None).children())[:-2]
         backbone = nn.Sequential(*modules)
         backbone.out_channels = 2048
-    elif args.backbone == 'resnet100':
+    elif args.backbone == 'resnet101':
         modules = list(resnet101(weights=None).children())[:-2]
         backbone = nn.Sequential(*modules)
         backbone.out_channels = 2048
 
     # Create Anchor Generator
-    anchor_generator = AnchorGenerator(sizes=((32, 64, 128, 256, 512),),
+    anchor_generator = AnchorGenerator(sizes=((8, 16, 32, 64, 128),),
                                        aspect_ratios=((0.5, 1.0, 2.0),))
 
     # Initialize FasterRCNN with Backbone and AnchorGenerator
@@ -122,7 +122,7 @@ def main():
         print(f'Load checkpoint: {args.checkpoint}')
         model.load_state_dict(torch.load(
             os.path.join('Trained Models', args.checkpoint)),
-            strict=False)
+            strict=True)
     else:
         print('No checkpoint selected!')
 

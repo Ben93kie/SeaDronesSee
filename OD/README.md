@@ -13,15 +13,15 @@ https://www.anaconda.com/products/distribution <br>
 3. Create a virtual environment: <br>
     ```conda create --name <env_name>``` <br>
     For additional information visit: <br>
-	https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
+    https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
 
-5. Activate the virtual environment: <br>
+4. Activate the virtual environment: <br>
     ```conda activate <env_name>``` <br>
 
-6. Install Pytorch (https://pytorch.org/): <br>
+5. Install Pytorch (https://pytorch.org/): <br>
     ```conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch``` <br>
 
-7. Install Pycocotools: <br>
+6. Install Pycocotools: <br>
     ``` conda install -c conda-forge pycocotools``` <br>
 
 # Training 
@@ -33,33 +33,32 @@ The 'Dataset' directory should look like this:
 ├── /annotations
 └── /images
 	├── /val
-	├── /test
 	└── /train
 ```
 
-To start the training, run ```python train_faster_rcnn.py``` <br>
+To start the training, run ```python train_faster_rcnn.py```. <br>
 To create a file that saves the console output, add ```--create_log```. <br>
 To create a prediction-file on the validation set after the training, add ```--create_prediction_file```. <br>
 
 Additional input arguments are:
-- ```backbone```: Determines CNN-backbone used in the Faster R-CNN
+- ```backbone```: Determines CNN-backbone used in the Faster R-CNN.
 - ```batch_size```
-- ```image_size```: Rescales all images to given size
-- ```checkpoint```: Loads checkpoint for training
+- ```image_size```: Rescales all images to the given size.
+- ```checkpoint```: Loads checkpoint for training.
 
 The model checkpoints are saved in the 'Trained Models' directory.
  
 # Evaluation, Visualization
 
-To evaluate the model, run: ```python test_faster_rcnn.py --checkpoint <checkpoint_name>```  <br>
+To evaluate the model, run: ```python test_faster_rcnn.py --checkpoint <checkpoint_name>```.  <br>
 The evaluation script TODO <br>
-To visualize the model results, run: ```python inference_faster_rcnn.py --checkpoint <checkpoint_name>``` <br>
-The script saves images with the predicted bounding boxes and labels in the 'Inference' directory
+To visualize the model results, run: ```python inference_faster_rcnn.py --checkpoint <checkpoint_name>```. <br>
+The script saves images with the predicted bounding boxes and labels in the 'Inference' directory.
 Make sure to specify a checkpoint for evaluation or inference. <br>
 
 # Creating a Prediction File:
 
-To participate in the challenge you have to hand in a json-file in the COCO format. That means a list of dictionaries, each containing one prediction: <br>
+To participate in the challenge you have to hand in a json-file in COCO format. That means a list of dictionaries, each containing one prediction: <br>
 ```
 { "image_id": 6503, "category_id": 4, "score": 0.6774558424949646, 
 "bbox": [ 426.15203857421875, 563.6422119140625, 43.328399658203125, 18.97894287109375 ] }
