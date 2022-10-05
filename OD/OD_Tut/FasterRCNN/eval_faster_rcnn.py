@@ -63,14 +63,12 @@ class Evaluator:
         cocoEval.params.imgIds = imgIds
         cocoEval.params.useCats = True
         cocoEval.params.iouType = "bbox"
-        cocoEval.params.iouThrs = np.array([0.4])
 
         cocoEval.evaluate()
         cocoEval.accumulate()
         cocoEval.summarize()
 
         return cocoEval
-
 
 
 def main():
@@ -80,7 +78,7 @@ def main():
 
     # Parse arguments
     parser = argparse.ArgumentParser(description='Test Faster R-CNN on SeaDroneSee')
-    parser.add_argument('--image_size', default='720x1280', type=str, help='[height]x[width]')
+    parser.add_argument('--image_size', default='1080x1920', type=str, help='[height]x[width]')
     parser.add_argument('--prediction_file', type=str, default=None, required=True)
     args = parser.parse_args()
 

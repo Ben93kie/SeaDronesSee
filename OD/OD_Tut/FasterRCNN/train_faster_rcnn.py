@@ -45,7 +45,7 @@ def main():
     parser.add_argument('--backbone', help='Choose resnet18, 50 or 101',
                         default='resnet18', type=str)
     parser.add_argument('--batch_size', default=12, type=int)
-    parser.add_argument('--image_size', default='720x1280', type=str, help='[height]x[width]')
+    parser.add_argument('--image_size', default='1080x1920', type=str, help='[height]x[width]')
     parser.add_argument('--create_prediction_file', action='store_true')
     parser.add_argument('--checkpoint', type=str, default=None)
     parser.add_argument('--create_log', action='store_true')
@@ -96,7 +96,7 @@ def main():
         backbone.out_channels = 2048
 
     # Create Anchor Generator
-    anchor_generator = AnchorGenerator(sizes=((8, 16, 32, 64, 128),),
+    anchor_generator = AnchorGenerator(sizes=((8, 16, 32, 64, 128, 256, 512),),
                                        aspect_ratios=((0.5, 1.0, 2.0),))
 
     # Initialize FasterRCNN with Backbone and AnchorGenerator
@@ -108,7 +108,7 @@ def main():
     if args.checkpoint is not None:
         model.load_state_dict(torch.load(
             os.path.join('Trained Models', args.checkpoint)),
-            strict=False)
+            strict=True)
 
     # Send model to device
     model.to(device)

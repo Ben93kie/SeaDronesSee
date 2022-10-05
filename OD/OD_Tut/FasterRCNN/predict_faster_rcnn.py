@@ -68,7 +68,7 @@ def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--backbone', help='backbone of the Faster R-CNN', default='resnet18', type=str)
-    parser.add_argument('--image_size', default='720x1280', type=str, help='[height]x[width]')
+    parser.add_argument('--image_size', default='1080x1920', type=str, help='[height]x[width]')
     parser.add_argument('--checkpoint', type=str, default=None,
                         required=True)
     args = parser.parse_args()
@@ -109,7 +109,7 @@ def main():
         backbone.out_channels = 2048
 
     # Create Anchor Generator
-    anchor_generator = AnchorGenerator(sizes=((8, 16, 32, 64, 128),),
+    anchor_generator = AnchorGenerator(sizes=((8, 16, 32, 64, 128, 256, 512),),
                                        aspect_ratios=((0.5, 1.0, 2.0),))
 
     # Initialize FasterRCNN with Backbone and AnchorGenerator
