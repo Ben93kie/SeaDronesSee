@@ -1,10 +1,28 @@
+<head>
+  <meta name="google-site-verification" content="IrTBOul_GquPsD_pSvsgGIenX7VTrGIM9fFXq7ebajc" />
+  <meta name="google-site-verification" content="7d-lc8zsGCYi_13t56Kwn9nnSKUUKZgsEMdvRCn5jew" />
+</head>  
+
 # SeaDronesSee
 Vision Benchmark for Maritime Search and Rescue
 
+
+<div align="center">
+  <img src="./cover.gif" width="600"/>
+ </div>
+<br>
 SeaDronesSee is a large-scale data set aimed at helping develop systems for Search and Rescue (SAR) using Unmanned Aerial Vehicles (UAVs) in maritime scenarios. Building highly complex autonomous UAV systems that aid in SAR missions requires robust computer vision algorithms to detect and track objects or persons of interest. This data set provides three sets of tracks: object detection, single-object tracking and multi-object tracking. Each track consists of its own data set and leaderboard. 
 
 This repository contains evaluation kits, code and model samples and links to the SeaDronesSee benchmark and evaluation webserver.
 
+## MaCVi 2023 - Information
+
+SeaDronesSee is featured as part of two challenges at [MaCVi '23](https://seadronessee.cs.uni-tuebingen.de/wacv23): 
+
+1. Object Detection v2 (standard Object Detection and binary Object Detection)
+2. Multi-Object Tracking
+
+For Object Detection v2, find the [dataset](https://seadronessee.cs.uni-tuebingen.de/dataset), [visualization](OD/visualize/) and [evaluation](<OD/evaluation of OD V2/>) scripts and [training and testing tutorials](OD/OD_Tut/) here and on the [workshop page](https://seadronessee.cs.uni-tuebingen.de/wacv23).
 
 ## Data Sets
 
@@ -82,7 +100,7 @@ This is a toy data set for the task of binary image classification. It aims at p
 
 Naturally, there may be edge cases (e.g. boats at the verge of the water and the shore).
 
-As metrics, we employ the prediction accuracy (number of correctly predicted images divided by number of all images) and the number of parameters of the model. For this benchmark, you can upload your trained ONNX model to be ranked on the leaderboard. For that, please refer to [this sample script](Boat_MNIST/train_boat_mnist.py). It trains a simple single-layer perceptron architecture on this data set upon saving and exporting the Pytorch model as an ONNX file. Make sure the exported model uses the transformation provided in this code, as this is the transformation used for the webserver evaluation.
+As metrics, we employ the prediction accuracy (number of correctly predicted images divided by number of all images) and the number of parameters of the model. For this benchmark, you can upload your trained ONNX model to be ranked on the leaderboard. For that, please refer to [this sample script](Boat_MNIST/challenge_nn.py). It trains a simple single-layer perceptron architecture on this data set upon saving and exporting the Pytorch model as an ONNX file. Make sure the exported model uses the transformation provided in this code, as this is the transformation used for the webserver evaluation.
 
 You can also find some sample solutions of some groups in the folders under Boat-MNIST with their respective group number.
 
@@ -99,6 +117,10 @@ booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Comp
 pages={2260--2270},
 year={2022} } 
 ```
+
+test:
+[google search console](google8dfd6ce11b9b519f.html)
+
 
 
 
