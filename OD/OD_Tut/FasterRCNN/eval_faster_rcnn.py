@@ -1,94 +1,90 @@
 import os
 import argparse
+import numpy as np
+import json
 
-from torchvision.models.detection.faster_rcnn import FasterRCNN
-from torchvision.models import resnet18, resnet50, resnet101
-from torchvision.models.detection.anchor_utils import AnchorGenerator
-import torch
-from torch import nn
-from torch.utils.data import DataLoader, Dataset
-
-from sds_dataset import SDSDataset
+from pycocotools.coco import COCO
+from pycocotools.cocoeval import COCOeval
 
 
-def collate_fn(batch):
-    return tuple(zip(*batch))
+class Evaluator:
+    def __init__(self, annotation_dir):
+
+        self.annotation_dir = annotation_dir
+
+        self.coco = COCO(annotation_dir)
+        self.image_ids = list(self.coco.imgs.keys())
+        self.annotations = self.get_annotations()
+
+        self.predictions = {
+            "images": self.annotations["images"].copy(),
+            "categories": self.annotations["categories"].copy(),
+            "annotations": None
+        }
+
+    def get_annotations(self):
+        with open(self.annotation_dir, 'r') as f:
+            data = json.load(f)
+
+        for d in data['annotations']:
+            d['iscrowd'] = 0
+
+        return data
+
+    def get_predictions(self, preds):
+        with open(os.path.join('Prediction Files', preds), 'r') as f:
+            data = json.load(f)
+
+        for new_id, d in enumerate(data, start=1):
+            d['id'] = new_id
+            d['iscrowd'] = 0
+            d['area'] = d['bbox'][2] * d['bbox'][3]
+
+        return data
+
+    def evaluate(self, pred_file, n_imgs=-1):
+
+        self.predictions["annotations"] = self.get_predictions(pred_file)
+
+        coco_ds = COCO()
+        coco_ds.dataset = self.annotations
+        coco_ds.createIndex()
+
+        coco_dt = COCO()
+        coco_dt.dataset = self.predictions
+        coco_dt.createIndex()
+
+        imgIds = sorted(coco_ds.getImgIds())
+
+        if n_imgs > 0:
+            imgIds = np.random.choice(imgIds, n_imgs)
+
+        cocoEval = COCOeval(coco_ds, coco_dt, 'bbox')
+        cocoEval.params.imgIds = imgIds
+        cocoEval.params.useCats = True
+        cocoEval.params.iouType = "bbox"
+
+        cocoEval.evaluate()
+        cocoEval.accumulate()
+        cocoEval.summarize()
+
+        return cocoEval
 
 
 def main():
 
-    # Set directory paths
-    test_data_dir = 'Datasets/seadronesea_august_splitted/images/val'
-    test_annotation_dir = 'Datasets/seadronesea_august_splitted/annotations/instances_val.json'
+    # Set annotation paths
+    annotation_dir = 'Datasets/SeaDroneSee/annotations/instances_val.json'
 
     # Parse arguments
     parser = argparse.ArgumentParser(description='Test Faster R-CNN on SeaDroneSee')
-    parser.add_argument('--backbone', help='backbone of the Faster R-CNN', default='resnet18', type=str)
-    parser.add_argument('--image_size', default='720x1280', type=str, help='[height]x[width]')
-    parser.add_argument('--checkpoint', type=str, default=None, required=True)
+    parser.add_argument('--image_size', default='1080x1920', type=str, help='[height]x[width]')
+    parser.add_argument('--prediction_file', type=str, default=None, required=True)
     args = parser.parse_args()
 
-    # Check if Cuda is available
-    print(f'Cuda available: {torch.cuda.is_available()}')
-    if torch.cuda.is_available():
-        # If yes, use GPU
-        device = torch.device('cuda')
-    else:
-        # If no, use CPU
-        device = torch.device('cpu')
+    evaluator = Evaluator(annotation_dir)
 
-    resize = (int(args.image_size.split('x')[0]), int(args.image_size.split('x')[1]))
-    print(f'Images resized to: {args.image_size}')
-
-    # Crate Dataset and Dataloader
-    test_dataset = SDSDataset(test_data_dir, test_annotation_dir, resize)
-    data_loader_test = DataLoader(test_dataset,
-                                  batch_size=1,
-                                  shuffle=True,
-                                  collate_fn=collate_fn)
-
-    # Use ResNet50 as Backbone
-    print(f'Using {args.backbone} as CNN backbone')
-    if args.backbone == 'resnet18':
-        modules = list(resnet18(weights=None).children())[:-2]
-        backbone = nn.Sequential(*modules)
-        backbone.out_channels = 512
-    elif args.backbone == 'resnet50':
-        modules = list(resnet50(weights=None).children())[:-2]
-        backbone = nn.Sequential(*modules)
-        backbone.out_channels = 2048
-    elif args.backbone == 'resnet100':
-        modules = list(resnet101(weights=None).children())[:-2]
-        backbone = nn.Sequential(*modules)
-        backbone.out_channels = 2048
-
-    # Create Anchor Generator
-    anchor_generator = AnchorGenerator(sizes=((32, 64, 128, 256, 512),),
-                                       aspect_ratios=((0.5, 1.0, 2.0),))
-
-    # Initialize FasterRCNN with Backbone and AnchorGenerator
-    model = FasterRCNN(backbone=backbone,
-                       rpn_anchor_generator=anchor_generator,
-                       num_classes=test_dataset.num_classes)
-
-    # Load checkpoint (optional)
-    if args.checkpoint is not None:
-        model.load_state_dict(torch.load(
-            os.path.join('Trained Models', args.checkpoint)),
-            strict=False)
-
-    # Send model to device
-    model.to(device)
-    model.train()
-
-    # Evaluation
-    with torch.no_grad():
-        for images, targets in data_loader_test:
-            images = list(image.to(device) for image in images)
-            targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
-
-            loss_dict = model(images, targets)
-            average_loss = sum(loss for loss in loss_dict.values()) / args.batch_size
+    evaluator.evaluate(args.prediction_file)
 
 
 if __name__ == '__main__':
