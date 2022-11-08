@@ -27,17 +27,18 @@ if __name__ == '__main__':
 
     missed = []
     displaced = []
-    for i in range (len(data1['images'])):
+    for i in range(len(data1['images'])):
         img = data1['images'][i]
         img_id = img['id']
         img_annots1 = [annots for annots in annotations1 if annots['image_id'] == img_id]  # list of ditcs
         img_annots2 = [annots for annots in annotations2 if annots['image_id'] == img_id]  # list of ditcs
-        if img_annots1 != img_annots2:
-            if len(img_annots2) > len(img_annots1):
-                missed.append(img_id)
-            else:
+        if len(img_annots2) > len(img_annots1):
+            missed.append(img_id)
+            continue
+        for j in range(len(img_annots2)):
+            if img_annots1[j]['bbox'] != img_annots2[j]['bbox']:
                 displaced.append(img_id)
-
+                break
     faulty_labels =  missed + displaced
 
     # # Uncomment if you wish to have a sperate file for img ids with missed bounding boxes
