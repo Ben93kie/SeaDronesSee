@@ -1,5 +1,5 @@
-# Creates a txt file containing imgs' IDs with displaced and missed bounding boxes
-# See below if wish to create seperate files for each case 
+# Creates a txt file containing imgs' IDs with displaced and missed bounding boxes (faulty_labels.txt)
+# See below if wish to create seperate files for each case (displaced.txt and missed.txt)
 
 import json
 import argparse
