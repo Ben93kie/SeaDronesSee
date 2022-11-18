@@ -28,6 +28,8 @@ For Object Detection v2, find the [dataset](https://seadronessee.cs.uni-tuebinge
 
 You can find the data sets on our webserver [here](https://seadronessee.cs.uni-tuebingen.de/dataset). Currently, we provide the following data sets:
 
+Object Detection v2: 8,930 train images, 1,547 validation images, 3,750 testing images 
+
 Object Detection: 5,630 train images, 859 validation images, 1,796 testing images
 
 Single-Object Tracking: 58 training video clips, 70 validation video clips and 80 testing video clips
