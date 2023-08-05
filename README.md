@@ -117,8 +117,14 @@ title={Seadronessee: A maritime benchmark for detecting humans in open water},
 author={Varga, Leon Amadeus and Kiefer, Benjamin and Messmer, Martin and Zell, Andreas},
 booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision},
 pages={2260--2270},
-year={2022} } 
+year={2022} }
 ```
+
+#### License
+
+Code is MIT license, dataset is Creative Commons CC0 1.0 Universal (CC0 1.0).
+
+Essentially, do what you want! 
 
 
 
