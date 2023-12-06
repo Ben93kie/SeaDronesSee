@@ -52,20 +52,39 @@ def get_args():
 
 def v1_od():
     # swimmer, person, boat, swimmer on boat, floater on boat, life jacket
-    categories = [1, 2, 3, 4, 5, 6]
-    ground_truth = os.path.join(ROOT_DIR, 'annotations', 'instances_' + 'val_iscrowd' + '.json')
+    # categories = [1, 2, 3, 4, 5, 6]
+    # categories = [1, 2, 3, 6]
+    categories = [0]
+    #MOT
+    # categories = [0]
+    # [{"supercategory": "person", "id": 1, "name": "swimmer"},
+    #  {"supercategory": "person", "id": 2, "name": "swimmer with life jacket"},
+    #  {"supercategory": "boat", "id": 3, "name": "boat"},
+    #  {"supercategory": "lifejacket", "id": 6, "name": "life jacket"}],
+    # ground_truth = os.path.join(ROOT_DIR, 'annotations', 'instances_' + 'val_iscrowd' + '.json')
+    # ground_truth = '/home/kiefer/PycharmProjects/3D_Tracking/gt_single_classs.json'
+    # ground_truth = '/home/kiefer/TCML/yolov7_tiny/yolov7_tiny_mit_early_stopping/result/gt_single_class.json'
+    # ground_truth = '/cshome/share/avalon/dataset/lake_constance_v2021_tracking/annotations/instances_test_objects_in_water_gt_iscrowd.json'
+    # ground_truth = '/home/kiefer/TCML/yolov7_tiny/yolov7_tiny_mit_early_stopping/result/gt_single_class.json'
+    ground_truth = '/cshome/share/avalon/dataset/seadronessee_august_splitted_challenge/annotations/instances_test.json'
+    print("using ground truth: ", ground_truth)
     return evaluate_coco(opt.file_name, categories, ground_truth)
 
 def v2_od_subtrack1():
     # swimmer, boat, jetski, life_saving_appliances, buoy
-    categories = [1, 2, 3, 4, 5]
+    # categories = [1, 2, 3, 4, 5]
+    categories = [0]
     ground_truth = os.path.join(ROOT_DIR, 'annotations', 'od_v2_annotations', 'instances_' + 'val_iscrowd' + '.json')
+    ground_truth = '/home/kiefer/Documents/SeaDronesSee/OD/evaluation of OD V2/required files/new_instances_shuffled_test_iscrowd.json'
+    ground_truth = '/home/kiefer/PycharmProjects/3D_Tracking/gt_single_classs.json'
     return evaluate_coco(opt.file_name, categories, ground_truth)
 
 def v2_od_subtrack2(filename):
     # non-water
     categories = [0]
     ground_truth = os.path.join(ROOT_DIR, 'annotations', 'od_v2_annotations', 'instances_' + 'val_iscrowd' + '_non_water' + '.json')
+    ground_truth = '/home/kiefer/Documents/SeaDronesSee/OD/evaluation of OD V2/required files/new_instances_test_iscrowd_non_water.json'
+    ground_truth = '/home/kiefer/PycharmProjects/3D_Tracking/gt_single_classs.json'
     return evaluate_coco(filename, categories, ground_truth)
 
 if __name__ == '__main__':

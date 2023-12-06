@@ -8,7 +8,7 @@ import argparse
 import os 
 
 
-colors = {1: (0,255,0), 2: (0,0,255), 3: (255,255,51), 4: (0,255,255), 5: (255, 102, 255), 6: (51, 153, 255)}
+colors = {1: (0,255,0), 2: (0,0,255), 3: (255,255,51), 4: (0,255,255), 5: (255, 102, 255), 0: (51, 153, 255)}
 
 if __name__ == '__main__':
     scriptTime = time.time()
@@ -28,7 +28,7 @@ if __name__ == '__main__':
         raise ValueError("Please enter a valid path for the output directory, where the images will be saved")
     if not os.path.isdir(options.output):
         raise ValueError("The output dir was not found.")
-
+    
     drone_65 = "drone_65.png"
     drone_65= cv2.imread(drone_65,-1)
     drone_65= cv2.resize(drone_65,(150,150))
@@ -39,13 +39,16 @@ if __name__ == '__main__':
     drone_35_65= cv2.imread(drone_35_65,-1)
     drone_35_65= cv2.resize(drone_35_65,(150,150))
     with open(options.annotation) as f:
+        
         data = json.load(f)
+        lenimg_annots = len(data['images'])
         total_number_of_images = len(os.listdir(options.images))
         for i in range(options.i):
-            idx = np.random.randint(0,total_number_of_images)
+            idx = np.random.randint(0,min(total_number_of_images,lenimg_annots))
             image = data['images'][idx]
             id = image['id']
             file_name = image['file_name']
+            print(options.images + '/' + file_name)
             img = cv2.imread(options.images + '/' + file_name)
             img_width = data['images'][0]['width']
             img_height = data['images'][0]['height']
@@ -53,8 +56,8 @@ if __name__ == '__main__':
             annotations = data['annotations']
             altitude = round(image['meta']['altitude'])
             saltitude = 'altitude= ' + str("%.2f" % (image['meta']['altitude'])) + ' m'
-            speed = round(image['meta']['speed'])
-            sspeed = 'speed= ' + str("%.2f" % (image['meta']['speed'])) + ' km/h'
+            speed = round(image['meta']['speed(mph)'])
+            sspeed = 'speed= ' + str("%.2f" % (image['meta']['speed(mph)'])) + ' mi/h'
             sangle = 'angle= ' + str("%.2f" %(image['meta']['gimbal_pitch'])) + ' degrees'
             angle = round(image['meta']['gimbal_pitch'])
             
@@ -86,4 +89,6 @@ if __name__ == '__main__':
             if angle >= 65:
                 img = cvzone.overlayPNG(img, drone_65,[40,drone_y_position])
 
-            cv2.imwrite(os.path.join(options.output,file_name), img)
+            cv2.imwrite(os.path.join(options.output,file_name).replace('png','jpg'), img)
+
+
