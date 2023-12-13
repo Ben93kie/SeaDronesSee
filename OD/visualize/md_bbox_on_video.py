@@ -8,7 +8,7 @@ import pyshine as ps
 import cvzone
 
 
-colors = {1: (0,255,0), 2: (0,0,255), 3: (255,255,51), 4: (0,255,255), 5: (255, 102, 255), 0: (51, 153, 255)}
+colors = {1: (0,255,0), 2: (0,0,255), 3: (255,255,51), 4: (0,255,255), 5: (255, 102, 255), 6: (51, 153, 255)}
 
 if __name__ == '__main__':
     scriptTime = time.time()
@@ -53,13 +53,12 @@ if __name__ == '__main__':
         out = cv2.VideoWriter(videoName, fourcc, fps, (img_width, img_height))
         for image in data['images']:
             currentImage += 1
-            print(options.images + '/' +image['file_name'])
             img = cv2.imread(options.images + '/' +image['file_name'])
             start = time.time()
             altitude = round(image['meta']['altitude'])
             saltitude = 'altitude= ' + str("%.2f" % (image['meta']['altitude'])) + ' m'
-            speed = round(image['meta']['speed(mph)'])
-            sspeed = 'speed= ' + str("%.2f" % (image['meta']['speed(mph)'])) + ' mi/h'
+            speed = round(image['meta']['speed'])
+            sspeed = 'speed= ' + str("%.2f" % (image['meta']['speed'])) + ' km/h'
             sangle = 'angle= ' + str("%.2f" %(image['meta']['gimbal_pitch'])) + ' degrees'
             angle = round(image['meta']['gimbal_pitch'])
             # draw all boundingBoxes, which belong to one image, on it with the corresponding colors of the categories
